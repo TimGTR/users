@@ -3,7 +3,6 @@ package org.example.users.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.users.dto.User;
-import org.example.users.dto.UserWithOrders;
 import org.example.users.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
