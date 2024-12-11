@@ -43,4 +43,9 @@ public class UserController {
     public Mono<UserProfile> saveUserProfile(@RequestBody UserProfile userProfile) {
         return userProfileService.saveUserProfile(userProfile);
     }
+
+    @GetMapping("/{userId}/orders")
+    public Mono<UserWithOrders> getUserWithOrders(@PathVariable Long userId) {
+        return userService.getUserWithOrders(userId);
+    }
 }

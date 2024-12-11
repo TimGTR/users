@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: users
@@ -29,3 +30,5 @@ spring:
           max-active: 10
           max-idle: 5
           min-idle: 2
+server:
+  port: 8080
