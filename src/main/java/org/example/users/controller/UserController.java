@@ -2,26 +2,45 @@ package org.example.users.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.users.dto.User;
+import org.example.users.entity.UserProfile;
+import org.example.users.service.UserProfileService;
+import org.example.users.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import org.example.users.service.UsersService;
 
 @RestController
 @RequestMapping("/users")
-@RequiredArgsConstructor
 public class UserController {
+    private final UserService userService;
+    private final UserProfileService userProfileService;
 
-    private final UsersService usersService;
-
-    @PostMapping("/register")
-    public Mono<ResponseEntity<String>> register(@RequestBody User user) {
-        return usersService.register(user)
-                .map(savedUser -> ResponseEntity.status(HttpStatus.CREATED).body("User registered"))
-                .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed"));
+    public UserController(UserService userService, UserProfileService userProfileService) {
+        this.userService = userService;
+        this.userProfileService = userProfileService;
     }
+
+    @PostMapping
+    public Mono<User> createUser(@RequestBody User user) {
+        return userService.createUser(user);
+    }
+
+    @GetMapping("/{id}")
+    public Mono<User> getUser(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @GetMapping("/{id}/profiles")
+    public Flux<UserProfile> getUserProfiles(@PathVariable Long id) {
+        return userProfileService.getUserProfiles(id);
+    }
+
+    @GetMapping("/cache/{id}")
+    public Mono<User> getUserWithCache(@PathVariable Long id) {
+        return userService.getUserWithCache(id);
+    }
+
 }
+

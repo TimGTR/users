@@ -15,6 +15,7 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://repo.spring.io/release") }
 }
 
 dependencies {
@@ -30,6 +31,8 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
+    implementation("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
+
 }
 
 tasks.withType<Test> {

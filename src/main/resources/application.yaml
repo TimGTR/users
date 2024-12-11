@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: users
+
+  # PostgreSQL
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  # MongoDB
+  data:
+    mongodb:
+      uri: mongodb://mongo:mongo@localhost:27017
+      username: mongo
+      password: mongo
+      database: mongo
+  # Redis
+  spring:
+    redis:
+      host: localhost
+      port: 6379
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 2
