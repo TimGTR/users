@@ -1,6 +1,7 @@
 package org.example.users.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.users.dto.User;
 import org.example.users.dto.UserWithOrders;
 import org.example.users.entity.UserProfile;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -47,6 +49,7 @@ public class UserController {
 
     @GetMapping("/{userId}/orders")
     public Mono<UserWithOrders> getUserWithOrders(@PathVariable Long userId) {
+        log.info("getUserWithOrders userId = {}", userId);
         return userService.getUserWithOrders(userId);
     }
 }
