@@ -5,22 +5,16 @@ import org.example.users.dto.User;
 import org.example.users.entity.UserProfile;
 import org.example.users.service.UserProfileService;
 import org.example.users.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final UserProfileService userProfileService;
-
-    public UserController(UserService userService, UserProfileService userProfileService) {
-        this.userService = userService;
-        this.userProfileService = userProfileService;
-    }
 
     @PostMapping
     public Mono<User> createUser(@RequestBody User user) {
@@ -41,6 +35,4 @@ public class UserController {
     public Mono<User> getUserWithCache(@PathVariable Long id) {
         return userService.getUserWithCache(id);
     }
-
 }
-
