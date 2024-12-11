@@ -35,4 +35,9 @@ public class UserController {
     public Mono<User> getUserWithCache(@PathVariable Long id) {
         return userService.getUserWithCache(id);
     }
+
+    @PostMapping("/profiles")
+    public Mono<UserProfile> saveUserProfile(@RequestBody UserProfile userProfile) {
+        return userProfileService.saveUserProfile(userProfile);
+    }
 }
