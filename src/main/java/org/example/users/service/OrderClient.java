@@ -5,6 +5,7 @@ import org.example.users.dto.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -16,11 +17,14 @@ public class OrderClient {
     }
 
     public Flux<Order> getOrdersByUserId(Long userId) {
-        log.info("getOrdersByUserId {}", userId);
+        log.info("Preparing request to orders service for userId: {}", userId);
         return webClient.get()
                 .uri("/orders/user/{userId}", userId)
                 .retrieve()
-                .bodyToFlux(Order.class);
+                .bodyToFlux(Order.class)
+                .doOnSubscribe(subscription -> log.info("Request sent to orders service for userId: {}", userId))
+                .doOnNext(order -> log.info("Received order: {}", order))
+                .doOnError(error -> log.error("Error fetching orders: ", error));
     }
 }
 

@@ -1,6 +1,7 @@
 package org.example.users.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.users.dto.User;
 import org.example.users.dto.UserWithOrders;
 import org.example.users.repository.UserRepository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -36,10 +38,20 @@ public class UserService {
     }
 
     public Mono<UserWithOrders> getUserWithOrders(Long userId) {
-        return userRepository.findById(userId)
-                .flatMap(user -> orderClient.getOrdersByUserId(userId)
-                        .collectList()
-                        .map(orders -> new UserWithOrders(user, orders)));
+        log.info("Fetching user with orders for userId = {}", userId);
+        return  userRepository.findById(userId)
+                .doOnNext(user -> log.info("User found: {}", user))
+                .switchIfEmpty(Mono.error(new RuntimeException("User not found")))
+                .flatMap(user -> {
+                    log.info("Fetching orders for userId: {}", userId);
+                    return orderClient.getOrdersByUserId(userId)
+                            .doOnNext(order -> log.info("Fetched order: {}", order))
+                            .collectList()
+                            .doOnNext(orders -> log.info("Orders collected: {}", orders))
+                            .map(orders -> new UserWithOrders(user, orders));
+                })
+                .doOnError(error -> log.error("Error fetching user with orders: ", error));
     }
+
 }
 
