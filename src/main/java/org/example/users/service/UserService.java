@@ -37,20 +37,19 @@ public class UserService {
                 );
     }
 
-    public Mono<UserWithOrders> getUserWithOrders(Long userId) {
+    public Flux<Object> getUserWithOrders(Long userId) {
         log.info("Fetching user with orders for userId = {}", userId);
-        return  userRepository.findById(userId)
+        return userRepository.findById(userId)
                 .doOnNext(user -> log.info("User found: {}", user))
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found")))
-                .flatMap(user -> {
+                .flatMapMany(user -> {
                     log.info("Fetching orders for userId: {}", userId);
                     return orderClient.getOrdersByUserId(userId)
                             .doOnNext(order -> log.info("Fetched order: {}", order))
-                            .collectList()
-                            .doOnNext(orders -> log.info("Orders collected: {}", orders))
-                            .map(orders -> new UserWithOrders(user, orders));
-                })
-                .doOnError(error -> log.error("Error fetching user with orders: ", error));
+                            .map(order -> (Object) order) // Преобразуем `Order` в общий тип
+                            .startWith((Object) user) // Добавляем информацию о пользователе как первый элемент
+                            .doOnError(error -> log.error("Error fetching orders: ", error));
+                });
     }
 
 }

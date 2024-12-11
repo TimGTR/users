@@ -48,7 +48,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/orders")
-    public Mono<UserWithOrders> getUserWithOrders(@PathVariable Long userId) {
+    public Flux<Object> getUserWithOrders(@PathVariable Long userId) {
         log.info("getUserWithOrders userId = {}", userId);
         return userService.getUserWithOrders(userId);
     }
