@@ -2,6 +2,7 @@ package org.example.users.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.users.dto.User;
+import org.example.users.dto.UserWithOrders;
 import org.example.users.entity.UserProfile;
 import org.example.users.service.UserProfileService;
 import org.example.users.service.UserService;
