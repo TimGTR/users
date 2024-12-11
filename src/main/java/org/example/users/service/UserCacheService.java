@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
 @Service
 @RequiredArgsConstructor
 public class UserCacheService {
@@ -16,7 +18,7 @@ public class UserCacheService {
     }
 
     public Mono<Void> saveUserToCache(User user) {
-        return redisTemplate.opsForValue().set("user:" + user.getId(), user)
+        return redisTemplate.opsForValue().set("user:" + user.getId(), user,  Duration.ofMinutes(10))
                 .then();
     }
 }

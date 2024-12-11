@@ -18,7 +18,10 @@ public class UserController {
 
     @PostMapping
     public Mono<User> createUser(@RequestBody User user) {
-        return userService.createUser(user);
+        return userService.createUser(User.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .build());
     }
 
     @GetMapping("/{id}")
